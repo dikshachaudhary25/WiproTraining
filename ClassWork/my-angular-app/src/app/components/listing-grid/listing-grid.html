@@ -1,0 +1,7 @@
+<div class="grid-container">
+    <div class="listing-grid">
+        @for (listing of listings(); track listing.id) {
+        <app-listing-card [listing]="listing"></app-listing-card>
+        }
+    </div>
+</div>

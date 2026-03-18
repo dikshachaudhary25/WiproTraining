@@ -1,0 +1,10 @@
+<div class="category-bar">
+    <div class="category-container">
+        @for (cat of categories(); track cat.name) {
+        <div class="category-item" [class.active]="activeCategory() === cat.name" (click)="setActive(cat.name)">
+            <span class="icon">{{ cat.icon }}</span>
+            <span class="label">{{ cat.name }}</span>
+        </div>
+        }
+    </div>
+</div>

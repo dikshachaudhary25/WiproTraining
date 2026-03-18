@@ -1,0 +1,27 @@
+<h1>{{title}}</h1>
+
+
+<form (ngSubmit)="onLogin()" #loginForm="ngForm">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" [(ngModel)]="username" placeholder="Enter username" required>
+        {{username}}
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" [(ngModel)]="password" placeholder="Enter password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+
+
+
+
+<div>
+    <ul>
+        <li *ngFor="let hobby of myhobbies">
+            <span *ngIf="hobby === 'chess'">{{hobby}}</span>
+        </li>
+    </ul>
+</div>

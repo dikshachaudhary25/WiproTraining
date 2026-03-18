@@ -1,0 +1,10 @@
+<h2>Course List</h2>
+
+<ul>
+  <li *ngFor="let course of courses">
+    {{ course.title }} ({{ course.duration }})
+    <button (click)="selectCourse(course)">View Details</button>
+  </li>
+</ul>
+
+<app-course-detail [course]="selectedCourse"></app-course-detail>

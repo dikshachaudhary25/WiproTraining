@@ -1,0 +1,35 @@
+<div class="card">
+    <div class="image-container">
+        <img [src]="listing().image" [alt]="listing().title">
+        <button class="wishlist-btn">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+                focusable="false"
+                style="display: block; fill: rgba(0, 0, 0, 0.5); height: 24px; width: 24px; stroke: white; stroke-width: 2; overflow: visible;">
+                <path
+                    d="m16 28c7-4.733 14-10 14-17 0-3.867-3.133-7-7-7-2.308 0-4.413 1.033-5.8 2.72c-1.387-1.687-3.492-2.72-5.8-2.72-3.867 0-7 3.133-7 7 0 7 7 12.267 14 17z">
+                </path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="details">
+        <div class="header">
+            <span class="location">{{ listing().location }}</span>
+            <div class="rating">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+                    focusable="false" style="display: block; height: 12px; width: 12px; fill: currentcolor;">
+                    <path
+                        d="M15.094 1.579l-4.124 8.885-9.86 1.27a1 1 0 0 0-.551 1.748l7.213 6.885-1.841 9.771a1 1 0 0 0 1.47 1.062l8.599-4.73 8.63 4.71a1 1 0 0 0 1.465-1.077l-1.856-9.754 7.213-6.885a1 1 0 0 0-.551-1.747l-9.861-1.272-4.133-8.886a1 1 0 0 0-1.792-.002z">
+                    </path>
+                </svg>
+                <span>{{ listing().rating }}</span>
+            </div>
+        </div>
+        <span class="title">{{ listing().title }}</span>
+        <span class="date">{{ listing().date }}</span>
+        <div class="price">
+            <span class="amount">${{ listing().price }}</span>
+            <span class="unit">night</span>
+        </div>
+    </div>
+</div>

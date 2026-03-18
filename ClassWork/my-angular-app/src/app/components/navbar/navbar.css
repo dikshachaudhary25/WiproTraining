@@ -1,0 +1,134 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: white;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 0;
+}
+
+.navbar-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 40px;
+    padding: 8px 8px 8px 24px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.search-bar:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.search-item {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-main);
+    background: none;
+    border: none;
+    padding: 0 16px;
+}
+
+.add-guests {
+    color: var(--text-muted);
+    font-weight: normal;
+}
+
+.divider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--border-color);
+}
+
+.search-icon {
+    background-color: var(--primary);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rent-button {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px;
+    border-radius: 24px;
+}
+
+.rent-button:hover {
+    background-color: #f7f7f7;
+}
+
+.globe-button {
+    padding: 12px;
+    border-radius: 50%;
+}
+
+.globe-button:hover {
+    background-color: #f7f7f7;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--border-color);
+    padding: 5px 5px 5px 12px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.profile-button:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #717171;
+    overflow: hidden;
+    color: white;
+}
+
+@media (max-width: 768px) {
+
+    .logo-text,
+    .rent-button,
+    .globe-button {
+        display: none;
+    }
+}
