@@ -1,0 +1,25 @@
+@model IEnumerable<MyWebApp.Models.Patient>
+<div>@TempData["Message"]</div> 
+<table class="table table-striped table-bordered table-hover">
+<tr>
+<th>MRN</th>
+<th>PatientName</th>
+<th>Age</th>
+<th>BodyWeight</th>
+<th>Height</th>
+<th>Action</th>
+</tr>
+@foreach(var item in Model){
+    <tr>
+    <td>@Html.DisplayFor(e=>item.MRN)</td>
+    <td>@Html.DisplayFor(e=>item.PatientName)</td>
+    <td>@Html.DisplayFor(e=>item.Age)</td>
+    <td>@Html.DisplayFor(e=>item.BodyWeight)</td>
+    <td>@Html.DisplayFor(e=>item.Height)</td>
+    <td>
+    <a asp-action="Edit" asp-route-MRN="@item.MRN">Edit</a>
+    <a asp-action="Delete" asp-route-MRN="@item.MRN">Delete</a>
+    </td>
+    </tr>
+}
+</table>

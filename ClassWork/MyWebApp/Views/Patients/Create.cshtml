@@ -1,0 +1,12 @@
+@model MyWebApp.Models.Patient
+<form method="post" action="Create">
+<div>
+<input type="text" asp-for="MRN" placeholder="MRN" />
+<input type="text" asp-for="PatientName" placeholder="PatientName" />
+<input type="text" asp-for="Age" placeholder="Age" />
+<input type="text" asp-for="BodyWeight" placeholder="BodyWeight" />
+<input type="text" asp-for="Height" placeholder="Height" />
+
+<input type="submit" value="Submit"/>
+</div>
+</form>

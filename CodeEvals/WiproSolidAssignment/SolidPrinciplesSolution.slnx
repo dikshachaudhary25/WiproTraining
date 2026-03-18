@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SolidPrinciplesDemo.Tests/SolidPrinciplesDemo.Tests.csproj" />
+  <Project Path="SolidPrinciplesDemo/SolidPrinciplesDemo.csproj" />
+</Solution>

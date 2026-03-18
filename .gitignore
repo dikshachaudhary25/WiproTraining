@@ -1,0 +1,70 @@
+# ======================
+# NODE / EXPRESS
+# ======================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ======================
+# ANGULAR
+# ======================
+.angular/
+dist/
+out-tsc/
+
+# ======================
+# .NET / VISUAL STUDIO
+# ======================
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+*.log
+
+# VS Code / Visual Studio
+.vs/
+.vscode/
+
+# ======================
+# ENV FILES
+# ======================
+.env
+.env.*
+
+# ======================
+# LOGS
+# ======================
+logs/
+*.log
+
+# ======================
+# OS FILES
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# BUILD / CACHE
+# ======================
+build/
+coverage/
+tmp/
+temp/
+
+# ======================
+# TEST / DEBUG
+# ======================
+*.stackdump
+
+# ======================
+# OPTIONAL LARGE FILES
+# ======================
+*.zip
+*.tar
+*.gz

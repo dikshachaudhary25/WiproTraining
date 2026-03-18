@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="MyApiApp/MyApiApp.csproj" />
+  <Project Path="MyWebApp/MyWebApp.csproj" />
+  <Project Path="Pharmacy.DAL/Pharmacy.DAL.csproj" />
+  <Project Path="Pharmacy.Models/Pharmacy.Models.csproj" />
+  <Project Path="Pharmacy/Pharmacy.csproj" />
+</Solution>
