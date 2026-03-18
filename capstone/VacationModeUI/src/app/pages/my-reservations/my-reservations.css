@@ -1,0 +1,130 @@
+.reservations-page {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.reservations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.reservation-card-v2 {
+  display: flex;
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.reservation-card-v2:hover {
+  transform: scale(1.01);
+}
+
+.res-image-side {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.res-image-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.res-content-side {
+  flex: 1;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.res-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.res-header h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.res-id {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.status-confirmed { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.status-cancelled { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+
+.res-dates-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.date-item .label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.date-item .value {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.res-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border);
+}
+
+.total-box .amount {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.booked-on {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .reservation-card-v2 {
+    flex-direction: column;
+  }
+  .res-image-side {
+    width: 100%;
+    height: 180px;
+  }
+}

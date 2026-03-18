@@ -1,0 +1,73 @@
+<div class="auth-container">
+  <div class="auth-card" style="max-width: 600px;">
+    <h2>{{ isEditMode ? 'Edit Property' : 'Add New Property' }}</h2>
+    <p class="subtitle">{{ isEditMode ? 'Update your property listing' : 'List your vacation property' }}</p>
+
+    <div *ngIf="errorMessage" class="alert alert-error">⚠️ {{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="alert alert-success">✅ {{ successMessage }}</div>
+
+    <form (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" placeholder="e.g. Luxury Beach Villa" [(ngModel)]="property.title" name="title" required />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea placeholder="Describe your property..." [(ngModel)]="property.description" name="description" required rows="4" style="resize: vertical;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Address / Location</label>
+        <input type="text" placeholder="e.g. Candolim Beach Road" [(ngModel)]="property.location" name="location" required />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" placeholder="City" [(ngModel)]="property.city" name="city" required />
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <input type="text" placeholder="State" [(ngModel)]="property.state" name="state" required />
+        </div>
+        <div class="form-group">
+          <label>Country</label>
+          <input type="text" placeholder="Country" [(ngModel)]="property.country" name="country" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Property Type</label>
+        <select [(ngModel)]="property.propertyType" name="propertyType" required>
+          <option value="Apartment">Apartment</option>
+          <option value="House">House</option>
+          <option value="Hotel">Hotel</option>
+          <option value="Villa">Villa</option>
+          <option value="Cabin">Cabin</option>
+          <option value="Cottage">Cottage</option>
+          <option value="Resort">Resort</option>
+          <option value="Haveli">Haveli</option>
+          <option value="Studio">Studio</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price Per Night (₹)</label>
+          <input type="number" placeholder="e.g. 5000" [(ngModel)]="property.pricePerNight" name="pricePerNight" required min="1" />
+        </div>
+        <div class="form-group">
+          <label>Max Guests</label>
+          <input type="number" placeholder="e.g. 4" [(ngModel)]="property.maxGuests" name="maxGuests" required min="1" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
+        {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Property' : 'Add Property') }}
+      </button>
+
+    </form>
+  </div>
+</div>

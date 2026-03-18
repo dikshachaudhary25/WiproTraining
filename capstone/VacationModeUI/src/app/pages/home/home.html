@@ -1,0 +1,28 @@
+<div class="home-container">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Find Your Perfect Vacation Stay</h1>
+      <p class="hero-subtitle">
+        Discover premium vacation rentals across India's most beautiful cities. 
+        Browse, compare, and book your dream getaway in minutes.
+      </p>
+      <div class="hero-actions">
+        <button routerLink="/properties" class="btn btn-primary">Browse Properties</button>
+        <button [routerLink]="['/register']" class="btn btn-outline">Join as Partner</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop&q=80" alt="Beautiful Vacation Home" />
+    </div>
+  </div>
+
+  <div class="featured-cities container">
+    <h2 class="text-center mb-4">Popular Cities</h2>
+    <div class="city-grid">
+      <div class="city-card">Goa</div>
+      <div class="city-card">Manali</div>
+      <div class="city-card">Jaipur</div>
+      <div class="city-card">Udaipur</div>
+    </div>
+  </div>
+</div>

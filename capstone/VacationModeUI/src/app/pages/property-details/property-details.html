@@ -1,0 +1,125 @@
+<div class="container py-5" *ngIf="isLoading">
+  <div class="empty-state">
+    <div class="spinner"></div>
+    <p>Loading your perfect stay...</p>
+  </div>
+</div>
+
+<div class="container py-5" *ngIf="!isLoading && !property">
+  <div class="empty-state">
+    <h2>Oops! Stay not found</h2>
+    <p>This property may have been removed or the link is broken.</p>
+    <button class="btn btn-primary mt-4" routerLink="/properties">Back to Listings</button>
+  </div>
+</div>
+
+<div class="property-details-container container" *ngIf="!isLoading && property">
+
+  <header class="details-header">
+    <button class="btn-back" routerLink="/properties">← Explore more stays</button>
+    <h1>{{ property.title }}</h1>
+    <div class="location-badge">📍 {{ property.location }}, {{ property.city }}, {{ property.state }}</div>
+  </header>
+
+  <div class="details-grid">
+
+    <div class="details-content">
+      <div class="main-image-wrapper">
+        <img [src]="property.imageUrl || placeholderImage" [alt]="property.title" class="main-image" />
+      </div>
+
+      <section class="info-section">
+        <h3>About this stay</h3>
+        <p class="description">{{ property.description }}</p>
+      </section>
+
+      <section class="features-section">
+        <h3>What this place offers</h3>
+        <div class="features-grid">
+          <div class="feature-item"><span>👥</span> {{ property.maxGuests }} Guests max</div>
+          <div class="feature-item"><span>🏠</span> {{ property.propertyType }}</div>
+          <div class="feature-item"><span>📍</span> {{ property.city }}, {{ property.state }}, {{ property.country }}</div>
+        </div>
+      </section>
+
+      <!-- Dynamic Features List -->
+      <section class="features-section" *ngIf="property.features && property.features.length > 0">
+        <h3>Features</h3>
+        <ul class="features-list">
+          <li *ngFor="let feature of property.features" class="feature-list-item">
+            <span class="feature-check">✓</span> {{ feature }}
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <aside class="reservation-sidebar">
+      <div class="price-box">
+        <span class="price">₹{{ property.pricePerNight }}</span>
+        <span class="unit">/ night</span>
+      </div>
+
+      <!-- Reservation form: only for logged-in renters -->
+      <ng-container *ngIf="auth.isLoggedIn() && auth.isRenter()">
+
+        <div class="reservation-card">
+
+          <div *ngIf="reservationSuccess" class="alert alert-success">
+            {{ reservationSuccess }}
+          </div>
+
+          <div *ngIf="reservationError" class="alert alert-error">
+            {{ reservationError }}
+          </div>
+
+          <div class="form-group">
+            <label>CHECK-IN</label>
+            <input type="date" [(ngModel)]="checkInDate" [min]="today" />
+          </div>
+
+          <div class="form-group border-top">
+            <label>CHECK-OUT</label>
+            <input type="date" [(ngModel)]="checkOutDate" [min]="checkInDate || today" />
+          </div>
+
+          <button class="btn btn-primary w-100 mt-4" (click)="reserveProperty()">
+            Reserve Stay
+          </button>
+
+          <p class="text-center text-muted mt-2" style="font-size: 0.75rem;">
+            You won't be charged yet
+          </p>
+
+        </div>
+
+      </ng-container>
+
+      <!-- Prompt for unauthenticated users -->
+      <div *ngIf="!auth.isLoggedIn()" class="reservation-card">
+        <p class="text-center text-muted" style="font-size: 0.9rem; padding: 1rem 0;">
+          <a routerLink="/login" style="color: var(--primary); font-weight: 600;">Log in</a>
+          or
+          <a routerLink="/register" style="color: var(--primary); font-weight: 600;">register</a>
+          to make a reservation.
+        </p>
+      </div>
+
+      <!-- Message for owners -->
+      <div *ngIf="auth.isLoggedIn() && auth.isOwner()" class="reservation-card">
+        <p class="text-center text-muted" style="font-size: 0.9rem; padding: 1rem 0;">
+          You are viewing this as an owner. Switch to a Renter account to make reservations.
+        </p>
+      </div>
+
+      <div class="owner-info mt-4">
+        <h4>Managed by</h4>
+        <div class="owner-pill">
+          <span class="avatar">👤</span>
+          <span>Owner #{{ property.ownerId }}</span>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+</div>

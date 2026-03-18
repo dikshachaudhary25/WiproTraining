@@ -1,0 +1,95 @@
+<section class="properties-page container">
+  <div class="page-header">
+    <h2>Explore Stays</h2>
+    <p class="text-muted">Find the best vacation rentals tailored for you.</p>
+  </div>
+
+  <div *ngIf="deleteError" class="alert alert-error" style="margin-bottom: 1rem;">⚠️ {{ deleteError }}</div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search by city..." [(ngModel)]="searchCity" (input)="filterProperties()" />
+    </div>
+    <div class="search-box">
+      <span class="search-icon">🏠</span>
+      <input type="text" placeholder="Filter by type..." [(ngModel)]="searchType" (input)="filterProperties()" />
+    </div>
+  </div>
+
+  <!-- Loading / Empty States -->
+  <div *ngIf="isLoading" class="empty-state">
+    <div class="spinner"></div>
+    <p>Finding properties...</p>
+  </div>
+
+  <div *ngIf="!isLoading && filteredProperties.length === 0" class="empty-state">
+    <p>No properties match your search criteria.</p>
+    <button class="btn btn-outline mt-4" (click)="searchCity=''; searchType=''; filterProperties()">Clear Filters</button>
+  </div>
+
+  <!-- Properties Grid -->
+  <div class="properties-grid" *ngIf="!isLoading">
+    <div *ngFor="let property of filteredProperties" class="property-card shadow-hover">
+      
+      <div class="card-image-wrapper">
+        <img [src]="property.imageUrl || placeholderImage" [alt]="property.title" loading="lazy" />
+        <span class="property-tag">{{ property.propertyType }}</span>
+      </div>
+
+      <div class="card-content">
+        <div class="card-header">
+          <h3>{{ property.title }}</h3>
+          <p class="location-text">📍 {{ property.city }}, {{ property.state }}</p>
+        </div>
+
+        <div class="card-features">
+          <span class="feature-badge">👥 {{ property.maxGuests }} Guests</span>
+        </div>
+
+        <div class="card-pricing-footer">
+          <div class="price-info">
+            <span class="price-amount">₹{{ property.pricePerNight }}</span>
+            <span class="price-unit">/ night</span>
+          </div>
+          <button class="btn btn-primary btn-sm" (click)="viewProperty(property.propertyId)">View Details</button>
+        </div>
+
+        <!-- Reserve button: only for logged-in renters -->
+        <div *ngIf="auth.isLoggedIn() && auth.isRenter()" class="reserve-action">
+          <button class="btn btn-secondary btn-sm" (click)="toggleReserveForm(property.propertyId)">
+            {{ reservingPropertyId === property.propertyId ? 'Cancel' : 'Reserve' }}
+          </button>
+        </div>
+
+        <!-- Inline Reservation Form -->
+        <div *ngIf="reservingPropertyId === property.propertyId" class="inline-reservation-form">
+          <div *ngIf="reservationSuccess" class="alert alert-success">{{ reservationSuccess }}</div>
+          <div *ngIf="reservationError" class="alert alert-error">{{ reservationError }}</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Check-in</label>
+              <input type="date" [(ngModel)]="checkInDate" [min]="today" />
+            </div>
+            <div class="form-group">
+              <label>Check-out</label>
+              <input type="date" [(ngModel)]="checkOutDate" [min]="checkInDate || today" />
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm w-full" (click)="submitReservation(property.propertyId)">
+            Confirm Reservation
+          </button>
+        </div>
+
+        <!-- Owner actions: only for the actual owner of this property -->
+        <div *ngIf="isPropertyOwner(property)" class="owner-actions">
+          <button class="btn-text btn-edit" (click)="editProperty(property.propertyId)">Edit</button>
+          <button class="btn-text btn-delete" (click)="deleteProperty(property.propertyId)">Delete</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

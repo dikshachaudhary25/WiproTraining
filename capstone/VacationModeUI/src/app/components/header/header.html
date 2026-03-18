@@ -1,0 +1,36 @@
+<nav class="navbar">
+
+  <!-- Logo -->
+  <a class="logo" routerLink="/">Vacation<span>Mode</span></a>
+
+  <!-- Primary nav links -->
+  <div class="nav-links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    <a routerLink="/properties" routerLinkActive="active">Properties</a>
+    
+    <!-- Owner specific links -->
+    <a *ngIf="auth.isLoggedIn() && auth.isOwner()" routerLink="/add-property" routerLinkActive="active">Add Property</a>
+    
+    <!-- Renter specific links -->
+    <a *ngIf="auth.isLoggedIn() && auth.isRenter()" routerLink="/my-reservations" routerLinkActive="active">My Reservations</a>
+  </div>
+
+  <!-- Auth area -->
+  <div class="nav-auth">
+    <ng-container *ngIf="!auth.isLoggedIn()">
+      <a routerLink="/login" routerLinkActive="active" class="nav-link-auth">Login</a>
+      <a routerLink="/register" routerLinkActive="active" class="nav-link-register">Register</a>
+    </ng-container>
+    
+    <ng-container *ngIf="auth.isLoggedIn()">
+      <div class="user-profile">
+        <div class="user-info">
+          <span class="user-name">{{ auth.getUserName() }}</span>
+          <span class="user-role">{{ auth.getUserRole() }}</span>
+        </div>
+        <button (click)="logout()" class="nav-logout">Logout</button>
+      </div>
+    </ng-container>
+  </div>
+
+</nav>

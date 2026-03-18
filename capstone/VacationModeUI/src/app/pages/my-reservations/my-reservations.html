@@ -1,0 +1,64 @@
+<div class="reservations-page container">
+  <header class="page-header">
+    <h2>Your Reservations</h2>
+    <p class="text-muted">Manage and track your upcoming and past vacation stays.</p>
+  </header>
+
+  <div *ngIf="isLoading" class="empty-state">
+    <div class="spinner"></div>
+    <p>Loading your bookings...</p>
+  </div>
+
+  <div *ngIf="!isLoading && reservations.length === 0" class="empty-state card">
+    <div class="empty-icon">📂</div>
+    <h3>No reservations yet</h3>
+    <p>Your future adventures will appear here once you book a stay.</p>
+    <button routerLink="/properties" class="btn btn-primary mt-4">Browse Properties</button>
+  </div>
+
+  <div *ngIf="!isLoading && reservations.length > 0" class="reservations-list">
+    <div *ngFor="let r of reservations" class="reservation-card-v2">
+      
+      <div class="res-image-side">
+        <img [src]="r.property?.imageUrl || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&auto=format&fit=crop&q=60'" alt="Property" />
+      </div>
+
+      <div class="res-content-side">
+        <div class="res-header">
+          <div>
+            <h3>{{ r.property?.title || ('Property #' + r.propertyId) }}</h3>
+            <p class="res-id">Confirmation ID: #{{ r.reservationId }}</p>
+          </div>
+          <span class="status-badge" [ngClass]="'status-' + r.reservationStatus.toLowerCase()">
+            {{ r.reservationStatus }}
+          </span>
+        </div>
+
+        <div class="res-dates-grid">
+          <div class="date-item">
+            <span class="label">CHECK-IN</span>
+            <span class="value">{{ r.checkInDate | date: 'EEE, MMM d, y' }}</span>
+          </div>
+          <div class="date-item">
+            <span class="label">CHECK-OUT</span>
+            <span class="value">{{ r.checkOutDate | date: 'EEE, MMM d, y' }}</span>
+          </div>
+        </div>
+
+        <div class="res-footer" style="align-items: center">
+          <div>
+            <div class="total-box">
+              <span class="label">TOTAL PAID</span>
+              <span class="amount">₹{{ r.totalAmount }}</span>
+            </div>
+            <div class="booked-on">
+              Booked on {{ r.createdAt | date: 'MMM d, y' }}
+            </div>
+          </div>
+          <button *ngIf="r.reservationStatus !== 'Cancelled'" (click)="cancelReservation(r.reservationId)" class="btn btn-danger btn-sm" style="padding: 0.5rem 1rem; border-radius: 6px; border: none; background: var(--error); color: white; cursor: pointer; font-weight: 600;">Cancel Booking</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
