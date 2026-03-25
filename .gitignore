@@ -48,6 +48,7 @@ logs/
 # ======================
 .DS_Store
 Thumbs.db
+~$*
 
 # ======================
 # BUILD / CACHE
@@ -56,11 +57,21 @@ build/
 coverage/
 tmp/
 temp/
+publish/
+**/wwwroot/uploads/
 
 # ======================
 # TEST / DEBUG
 # ======================
 *.stackdump
+
+# ======================
+# .NET RUNTIME LOGS
+# ======================
+*_log.txt
+output.log
+error.log
+backend_log.txt
 
 # ======================
 # OPTIONAL LARGE FILES
