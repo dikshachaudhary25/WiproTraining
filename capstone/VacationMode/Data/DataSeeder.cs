@@ -19,7 +19,7 @@ public static class DataSeeder
     private static string HashPassword(string password) =>
         Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
 
-    // ─── Users ────────────────────────────────────────────────────────────────
+    
 
     private static void SeedUsers(AppDbContext context)
     {
@@ -31,13 +31,15 @@ public static class DataSeeder
             new User { FullName = "Neha Sharma",   Email = "neha@vacationmode.com",   PhoneNumber = "9830003003", Role = "Owner",  PasswordHash = HashPassword("Password123") },
             new User { FullName = "Aditi Verma",   Email = "aditi@vacationmode.com",  PhoneNumber = "9840004004", Role = "Renter", PasswordHash = HashPassword("Password123") },
             new User { FullName = "Rahul Gupta",   Email = "rahul@vacationmode.com",  PhoneNumber = "9850005005", Role = "Renter", PasswordHash = HashPassword("Password123") },
-            new User { FullName = "Sneha Iyer",    Email = "sneha@vacationmode.com",  PhoneNumber = "9860006006", Role = "Renter", PasswordHash = HashPassword("Password123") }
+            new User { FullName = "Sneha Iyer",    Email = "sneha@vacationmode.com",  PhoneNumber = "9860006006", Role = "Renter", PasswordHash = HashPassword("Password123") },
+            new User { FullName = "Samriddhi",     Email = "samriddhi@gmail.com",     PhoneNumber = "1234567890", Role = "Owner",  PasswordHash = HashPassword("Samriddhi") },
+            new User { FullName = "Suprabha",      Email = "suprabha@gmail.com",      PhoneNumber = "0987654321", Role = "Renter", PasswordHash = HashPassword("Suprabha") }
         );
 
         context.SaveChanges();
     }
 
-    // ─── Features ─────────────────────────────────────────────────────────────
+    
 
     private static void SeedFeatures(AppDbContext context)
     {
@@ -61,7 +63,7 @@ public static class DataSeeder
         context.SaveChanges();
     }
 
-    // ─── Properties ───────────────────────────────────────────────────────────
+    
 
     private static void SeedProperties(AppDbContext context)
     {
@@ -227,7 +229,7 @@ public static class DataSeeder
         context.SaveChanges();
     }
 
-    // ─── Property Images ───────────────────────────────────────────────────────
+    
 
     private static void SeedPropertyImages(AppDbContext context)
     {
@@ -237,43 +239,43 @@ public static class DataSeeder
 
         var images = new List<PropertyImage>
         {
-            // Luxury Beach Villa – Goa
+            
             new PropertyImage { PropertyId = pm["Luxury Beach Villa"].PropertyId,        ImageUrl = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Luxury Beach Villa"].PropertyId,        ImageUrl = "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Himalayan Mountain Cabin – Manali
+            
             new PropertyImage { PropertyId = pm["Himalayan Mountain Cabin"].PropertyId,  ImageUrl = "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Himalayan Mountain Cabin"].PropertyId,  ImageUrl = "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Lake View Cottage – Udaipur
+            
             new PropertyImage { PropertyId = pm["Lake View Cottage"].PropertyId,         ImageUrl = "https://images.unsplash.com/photo-1505691723518-36a5ac3b2f72?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Lake View Cottage"].PropertyId,         ImageUrl = "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Heritage Haveli Stay – Jaipur
+            
             new PropertyImage { PropertyId = pm["Heritage Haveli Stay"].PropertyId,      ImageUrl = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Heritage Haveli Stay"].PropertyId,      ImageUrl = "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Modern Sea-View Apartment – Mumbai
+            
             new PropertyImage { PropertyId = pm["Modern Sea-View Apartment"].PropertyId, ImageUrl = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Modern Sea-View Apartment"].PropertyId, ImageUrl = "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Tea Garden Retreat – Munnar
+            
             new PropertyImage { PropertyId = pm["Tea Garden Retreat"].PropertyId,        ImageUrl = "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Tea Garden Retreat"].PropertyId,        ImageUrl = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Hilltop Resort – Shimla
+            
             new PropertyImage { PropertyId = pm["Hilltop Resort"].PropertyId,            ImageUrl = "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Hilltop Resort"].PropertyId,            ImageUrl = "https://images.unsplash.com/photo-1553653924-39b70295f8da?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Backwater Villa – Alleppey
+            
             new PropertyImage { PropertyId = pm["Backwater Villa"].PropertyId,           ImageUrl = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Backwater Villa"].PropertyId,           ImageUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Riverside Cottage – Rishikesh
+            
             new PropertyImage { PropertyId = pm["Riverside Cottage"].PropertyId,         ImageUrl = "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Riverside Cottage"].PropertyId,         ImageUrl = "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
 
-            // Luxury Penthouse – Bangalore
+            
             new PropertyImage { PropertyId = pm["Luxury Penthouse"].PropertyId,          ImageUrl = "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&fit=crop&q=80",  IsPrimary = true  },
             new PropertyImage { PropertyId = pm["Luxury Penthouse"].PropertyId,          ImageUrl = "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&auto=format&fit=crop&q=80",  IsPrimary = false },
         };
@@ -282,7 +284,7 @@ public static class DataSeeder
         context.SaveChanges();
     }
 
-    // ─── Property Features ────────────────────────────────────────────────────
+    
 
     private static void SeedPropertyFeatures(AppDbContext context)
     {
@@ -327,7 +329,7 @@ public static class DataSeeder
         context.SaveChanges();
     }
 
-    // ─── Reservations ─────────────────────────────────────────────────────────
+    
 
     private static void SeedReservations(AppDbContext context)
     {

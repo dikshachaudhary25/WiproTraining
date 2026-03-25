@@ -1,4 +1,5 @@
 <div class="home-container">
+  
   <div class="hero-section">
     <div class="hero-content">
       <h1>Find Your Perfect Vacation Stay</h1>
@@ -16,13 +17,34 @@
     </div>
   </div>
 
-  <div class="featured-cities container">
-    <h2 class="text-center mb-4">Popular Cities</h2>
-    <div class="city-grid">
-      <div class="city-card">Goa</div>
-      <div class="city-card">Manali</div>
-      <div class="city-card">Jaipur</div>
-      <div class="city-card">Udaipur</div>
+  
+  <div class="featured-cities container mb-5">
+    <h2 class="section-title">Popular Destinations</h2>
+    <p class="text-muted mb-4">The highest-rated places to visit.</p>
+    
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-5">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="city-grid" *ngIf="!isLoading && popularDestinations.length > 0">
+      <div *ngFor="let city of popularDestinations" class="city-card" (click)="navigateToCity(city.name)">
+        <span class="city-icon">{{ city.icon }}</span>{{ city.name }}
+        <div class="city-rating" *ngIf="city.maxRating > 0">⭐ {{ city.maxRating | number:'1.1-1' }} max</div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && popularDestinations.length === 0" class="text-center py-5">
+      <p class="text-muted">No high-rated destinations found yet.</p>
     </div>
   </div>
+
+  
+  <div class="cta-banner container mt-5">
+    <div class="cta-content">
+      <h2>Own a property? List it with us.</h2>
+      <p>Reach thousands of travelers and earn passive income from your vacation home.</p>
+      <button routerLink="/register" class="btn btn-primary">Get Started</button>
+    </div>
+  </div>
+
 </div>

@@ -7,7 +7,7 @@ namespace VacationMode.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "owner")]
+    [Authorize(Roles = "Owner")]
     public class OwnerController : ControllerBase
     {
         private readonly AppDbContext _context;

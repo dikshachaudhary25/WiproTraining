@@ -20,8 +20,24 @@ export class ReservationService {
         return this.http.get<Reservation[]>(`${this.apiUrl}/my-reservations`);
     }
 
+    getOwnerReservations(): Observable<Reservation[]> {
+        return this.http.get<Reservation[]>(`${this.apiUrl}/owner-reservations`);
+    }
+
+    confirmReservation(id: number): Observable<any> {
+        return this.http.put(`${this.apiUrl}/confirm/${id}`, {});
+    }
+
+    rejectReservation(id: number): Observable<any> {
+        return this.http.put(`${this.apiUrl}/reject/${id}`, {});
+    }
+
     cancelReservation(id: number): Observable<any> {
-        // Backend returns Ok("Reservation cancelled") which is plain text, so responseType is needed
+        
         return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' as 'json' });
+    }
+
+    getBookedDates(propertyId: number): Observable<string[]> {
+        return this.http.get<string[]>(`${this.apiUrl}/property/${propertyId}/booked-dates`);
     }
 }

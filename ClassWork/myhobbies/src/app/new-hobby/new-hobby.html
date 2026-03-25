@@ -1,0 +1,10 @@
+<h2>Add Hobby</h2>
+
+<input [(ngModel)]="name" placeholder="Hobby name" />
+
+<label>
+  <input type="checkbox" [(ngModel)]="fav" />
+  Favourite
+</label>
+
+<button (click)="submit()">Add</button>

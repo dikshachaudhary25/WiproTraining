@@ -1,27 +1,14 @@
-<h1>{{title}}</h1>
-
+<h2>Login</h2>
 
 <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" [(ngModel)]="username" placeholder="Enter username" required>
-        {{username}}
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" [(ngModel)]="password" placeholder="Enter password" required>
-    </div>
-    <button type="submit">Login</button>
+  <div>
+    <label>Username: <input type="text" name="username" [(ngModel)]="username" required /></label>
+  </div>
+  <div>
+    <label>Password: <input type="password" name="password" [(ngModel)]="password" required /></label>
+  </div>
+  <p *ngIf="errorMessage">{{ errorMessage }}</p>
+  <button type="submit">Login</button>
 </form>
 
-
-
-
-
-<div>
-    <ul>
-        <li *ngFor="let hobby of myhobbies">
-            <span *ngIf="hobby === 'chess'">{{hobby}}</span>
-        </li>
-    </ul>
-</div>
+<p>Don't have an account? <a routerLink="/register">Register</a></p>

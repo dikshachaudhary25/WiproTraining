@@ -47,13 +47,29 @@
 }
 
 .city-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0 -0.5rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar but allow scrolling */
+.city-grid::-webkit-scrollbar {
+  display: none;
+}
+.city-grid {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .city-card {
-  padding: 2rem;
+  min-width: 200px;
+  flex: 0 0 auto;
+  padding: 2.5rem 1.5rem;
   background: white;
   border-radius: var(--radius);
   text-align: center;
@@ -62,12 +78,48 @@
   box-shadow: var(--shadow);
   transition: all 0.2s;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .city-card:hover {
   transform: translateY(-5px);
   color: var(--primary);
   box-shadow: var(--shadow-lg);
+}
+
+.city-rating {
+  font-size: 0.85rem;
+  color: #fbbf24;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.cta-banner {
+  background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+  color: white;
+  padding: 4rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+.home-footer hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
 }
 
 @media (max-width: 968px) {
@@ -84,5 +136,9 @@
   
   .hero-actions {
     justify-content: center;
+  }
+
+  .cta-banner {
+    padding: 2.5rem 1rem;
   }
 }

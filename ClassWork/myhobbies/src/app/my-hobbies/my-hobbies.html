@@ -1,0 +1,10 @@
+<h2>My Hobbies</h2>
+
+<p *ngIf="hobbies.length === 0">No hobbies yet. Add some!</p>
+
+<ul>
+  <li *ngFor="let hobby of hobbies; let i = index">
+    <span>{{ hobby.name }} </span>
+    <button (click)="onDelete(i)">Delete</button>
+  </li>
+</ul>

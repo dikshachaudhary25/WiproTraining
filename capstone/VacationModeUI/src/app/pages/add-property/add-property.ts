@@ -1,4 +1,4 @@
-import { Component, OnInit, afterNextRender, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -20,6 +20,10 @@ export class AddPropertyComponent implements OnInit {
   errorMessage = '';
   isLoading = false;
 
+  
+  selectedFiles: File[] = [];
+  imagePreviews: string[] = [];
+
   property: Property = {
     title: '',
     description: '',
@@ -37,10 +41,11 @@ export class AddPropertyComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) {
-    // Fetch property data only after the component renders in the browser
-    afterNextRender(() => {
-      const id = this.route.snapshot.paramMap.get('id');
+  ) {}
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
       if (id) {
         this.isEditMode = true;
         this.propertyId = +id;
@@ -68,8 +73,35 @@ export class AddPropertyComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // intentionally empty — data loading is deferred to afterNextRender
+  onImagesSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
+
+    const newFiles = Array.from(input.files);
+    const combined = [...this.selectedFiles, ...newFiles];
+
+    if (combined.length > 5) {
+      this.errorMessage = 'You can select a maximum of 5 images.';
+      return;
+    }
+
+    this.errorMessage = '';
+    this.selectedFiles = combined;
+    this.imagePreviews = [];
+
+    this.selectedFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreviews.push(e.target?.result as string);
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  removeImage(index: number) {
+    this.selectedFiles.splice(index, 1);
+    this.imagePreviews.splice(index, 1);
   }
 
   onSubmit() {
@@ -80,9 +112,25 @@ export class AddPropertyComponent implements OnInit {
     if (this.isEditMode && this.propertyId) {
       this.propertyService.updateProperty(this.propertyId, this.property).subscribe({
         next: () => {
-          this.isLoading = false;
-          this.successMessage = 'Property updated successfully!';
-          setTimeout(() => this.router.navigate(['/properties']), 1200);
+          
+          if (this.selectedFiles.length > 0) {
+            this.propertyService.uploadImages(this.propertyId!, this.selectedFiles).subscribe({
+              next: () => {
+                this.isLoading = false;
+                this.successMessage = 'Property updated with new images!';
+                setTimeout(() => this.router.navigate(['/properties']), 1200);
+              },
+              error: () => {
+                this.isLoading = false;
+                this.successMessage = 'Property updated, but image upload failed.';
+                setTimeout(() => this.router.navigate(['/properties']), 1500);
+              }
+            });
+          } else {
+            this.isLoading = false;
+            this.successMessage = 'Property updated successfully!';
+            setTimeout(() => this.router.navigate(['/properties']), 1200);
+          }
         },
         error: () => {
           this.isLoading = false;
@@ -91,10 +139,26 @@ export class AddPropertyComponent implements OnInit {
       });
     } else {
       this.propertyService.createProperty(this.property).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.successMessage = 'Property added successfully!';
-          setTimeout(() => this.router.navigate(['/properties']), 1200);
+        next: (created: any) => {
+          const newId = created.propertyId ?? created.id;
+          if (this.selectedFiles.length > 0 && newId) {
+            this.propertyService.uploadImages(newId, this.selectedFiles).subscribe({
+              next: () => {
+                this.isLoading = false;
+                this.successMessage = 'Property added with images!';
+                setTimeout(() => this.router.navigate(['/properties']), 1200);
+              },
+              error: () => {
+                this.isLoading = false;
+                this.successMessage = 'Property added, but image upload failed. You can re-upload images by editing.';
+                setTimeout(() => this.router.navigate(['/properties']), 2000);
+              }
+            });
+          } else {
+            this.isLoading = false;
+            this.successMessage = 'Property added successfully!';
+            setTimeout(() => this.router.navigate(['/properties']), 1200);
+          }
         },
         error: () => {
           this.isLoading = false;

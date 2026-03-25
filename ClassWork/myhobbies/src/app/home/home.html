@@ -1,0 +1,15 @@
+<app-my-hobbies
+  *ngIf="selectedView === 'my'"
+  [hobbies]="hobbies"
+  (delete)="deleteHobby($event)">
+</app-my-hobbies>
+
+<app-new-hobby
+  *ngIf="selectedView === 'add'"
+  (add)="addHobby($event)">
+</app-new-hobby>
+
+<app-fav-hobby
+  *ngIf="selectedView === 'fav'"
+  [hobbies]="hobbies">
+</app-fav-hobby>

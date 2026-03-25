@@ -11,6 +11,9 @@ export interface Property {
   propertyType: string;
   pricePerNight: number;
   maxGuests: number;
-  imageUrl?: string;
+  createdAt?: Date;
+  images?: string[];
+  rating?: number;
   features?: string[];
+  isInWishlist?: boolean;
 }

@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public IActionResult Register(RegisterDto dto)
     {
-        // Check for duplicate email (case-insensitive)
+        
         var exists = _context.Users.Any(u => u.Email.ToLower() == dto.Email.ToLower());
         if (exists)
             return BadRequest("An account with this email already exists.");
@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         var user = new User
         {
             FullName = dto.FullName,
-            Email = dto.Email.ToLower().Trim(), // normalize email
+            Email = dto.Email.ToLower().Trim(), 
             PhoneNumber = dto.PhoneNumber,
             Role = dto.Role,
             PasswordHash = passwordHash
@@ -53,7 +53,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login(LoginDto dto)
     {
-        // Case-insensitive email lookup
+        
         var emailLower = dto.Email.ToLower().Trim();
         var user = _context.Users.FirstOrDefault(u => u.Email.ToLower() == emailLower);
 
@@ -69,7 +69,7 @@ public class AuthController : ControllerBase
 
         var token = CreateToken(user);
 
-        // Return just "token" and let the global camelCase policy handle casing
+        
         return Ok(new { token });
     }
 

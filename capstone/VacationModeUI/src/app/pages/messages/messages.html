@@ -1,0 +1,105 @@
+<div class="chat-container">
+  
+  
+  <div class="chat-sidebar" [class.d-none-mobile]="activeConversation">
+    <div class="sidebar-header">
+      <h2>Inbox</h2>
+    </div>
+
+    
+    <div *ngIf="isLoadingConversations" class="sidebar-empty">
+      <div class="spinner"></div>
+    </div>
+
+    
+    <div *ngIf="!isLoadingConversations && conversations.length === 0" class="sidebar-empty">
+      <div class="empty-icon">✉️</div>
+      <p>No messages yet.</p>
+    </div>
+
+    
+    <div class="conversation-list" *ngIf="!isLoadingConversations && conversations.length > 0">
+      <div 
+        *ngFor="let conv of conversations" 
+        class="conversation-item"
+        [class.active]="activeConversation?.propertyId === conv.propertyId && activeConversation?.otherUserId === conv.otherUserId"
+        (click)="selectConversation(conv)">
+        
+        <div class="conv-avatar">
+          {{ conv.otherUserName.charAt(0) | uppercase }}
+        </div>
+        
+        <div class="conv-details">
+          <div class="conv-header">
+            <span class="conv-name">{{ conv.otherUserName }}</span>
+            <span class="conv-time">{{ conv.lastMessageTime | date:'shortTime' }}</span>
+          </div>
+          <div class="conv-property">{{ conv.propertyTitle }}</div>
+          <div class="conv-preview" [class.fw-bold]="conv.isUnread">{{ conv.lastMessageText }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="chat-main" [class.d-none-mobile]="!activeConversation">
+    
+    
+    <div *ngIf="!activeConversation" class="chat-empty-state d-none d-md-flex">
+      <div class="empty-icon">💬</div>
+      <h3>Your Messages</h3>
+      <p>Select a conversation from the sidebar to view the chat.</p>
+    </div>
+
+    
+    <div *ngIf="activeConversation" class="chat-active">
+      
+      
+      <div class="chat-header">
+        <button class="btn btn-icon d-md-none me-2" (click)="backToList()">
+          <i class="fas fa-arrow-left"></i> ←
+        </button>
+        <div class="chat-header-info">
+          <h3 class="mb-0">{{ activeConversation.otherUserName }}</h3>
+          <small class="text-muted">Regarding: {{ activeConversation.propertyTitle }}</small>
+        </div>
+      </div>
+
+      
+      <div class="chat-history" #chatHistory>
+        <div *ngIf="isLoadingThread" class="text-center py-4">
+          <div class="spinner"></div>
+        </div>
+
+        <div *ngIf="!isLoadingThread">
+          <div *ngFor="let msg of activeThread" class="message-wrapper" [class.sent]="msg.senderId === auth.getUserId()" [class.received]="msg.senderId !== auth.getUserId()">
+            <div class="message-bubble">
+              <p class="mb-1">{{ msg.messageText }}</p>
+              <div class="message-time">{{ msg.sentAt | date:'shortTime' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="chat-input-area">
+        <form (ngSubmit)="sendMessage()" class="chat-form">
+          <input 
+            type="text" 
+            name="newMsg" 
+            [(ngModel)]="newMessageText" 
+            placeholder="Type your message..." 
+            class="chat-input"
+            autocomplete="off"
+            [disabled]="isSending">
+          
+          <button type="submit" class="btn btn-primary send-btn" [disabled]="!newMessageText.trim() || isSending">
+            <span *ngIf="!isSending">Send »</span>
+            <span *ngIf="isSending">...</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>

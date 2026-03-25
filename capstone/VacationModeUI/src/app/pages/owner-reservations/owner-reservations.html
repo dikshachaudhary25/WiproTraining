@@ -1,0 +1,65 @@
+<div class="reservations-page container">
+  <header class="page-header">
+    <h2>Incoming Reservations</h2>
+    <p class="text-muted">Manage the bookings made for your properties.</p>
+  </header>
+
+  <div *ngIf="isLoading" class="empty-state">
+    <div class="spinner"></div>
+    <p>Loading bookings...</p>
+  </div>
+
+  <div *ngIf="!isLoading && reservations.length === 0" class="empty-state card">
+    <div class="empty-icon">📂</div>
+    <h3>No reservations yet</h3>
+    <p>When renters book your properties, they will appear here.</p>
+  </div>
+
+  <div *ngIf="!isLoading && reservations.length > 0" class="reservations-list">
+    <div *ngFor="let r of reservations" class="reservation-card-v2">
+      
+      <div class="res-image-side">
+        <img [src]="r.property?.images?.[0] || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&auto=format&fit=crop&q=60'" alt="Property" />
+      </div>
+
+      <div class="res-content-side">
+        <div class="res-header">
+          <div>
+            <h3>{{ r.property?.title || ('Property #' + r.propertyId) }}</h3>
+            <p class="res-id">{{ r.renterName || ('Renter #' + r.userId) }} | Reservation ID: #{{ r.reservationId }}</p>
+          </div>
+          <span class="status-badge" [ngClass]="'status-' + (r.reservationStatus ? r.reservationStatus.toLowerCase() : 'pending')">
+            {{ r.reservationStatus || 'Pending' }}
+          </span>
+        </div>
+
+        <div class="res-dates-grid">
+          <div class="date-item">
+            <span class="label">CHECK-IN</span>
+            <span class="value">{{ r.checkInDate | date: 'EEE, MMM d, y' }}</span>
+          </div>
+          <div class="date-item">
+            <span class="label">CHECK-OUT</span>
+            <span class="value">{{ r.checkOutDate | date: 'EEE, MMM d, y' }}</span>
+          </div>
+        </div>
+
+        <div class="res-footer" style="align-items: center; justify-content: space-between">
+          <div class="total-box">
+            <span class="label">EXPECTED PAYOUT</span>
+            <span class="amount">₹{{ r.totalAmount }}</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button *ngIf="r.reservationStatus === 'Pending'" (click)="rejectReservation(r.reservationId)" [disabled]="isRejecting[r.reservationId!]" class="btn btn-outline btn-sm">
+              {{ isRejecting[r.reservationId!] ? 'Rejecting...' : 'Reject' }}
+            </button>
+            <button *ngIf="r.reservationStatus === 'Pending'" (click)="confirmReservation(r.reservationId)" [disabled]="isConfirming[r.reservationId!]" class="btn btn-primary btn-sm">
+              {{ isConfirming[r.reservationId!] ? 'Confirming...' : 'Confirm Booking' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+{
+    "hobbies": [
+      { "id": 1, "name": "Driving", "fav": true },
+      { "id": 2, "name": "Shopping", "fav": false }
+    ]
+  }

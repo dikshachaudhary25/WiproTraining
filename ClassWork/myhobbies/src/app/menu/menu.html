@@ -1,0 +1,17 @@
+<nav>
+  <span>My Hobbies App</span>
+  |
+  <ng-container *ngIf="authService.isLoggedIn()">
+    <button (click)="selectView('my')">My Hobbies</button>
+    <button (click)="selectView('add')">Add Hobby</button>
+    <button (click)="selectView('fav')">Favourites</button>
+    |
+    <span>{{ authService.getCurrentUser()?.username }}</span>
+    <button (click)="logout()">Logout</button>
+  </ng-container>
+  <ng-container *ngIf="!authService.isLoggedIn()">
+    <a routerLink="/login">Login</a>
+    |
+    <a routerLink="/register">Register</a>
+  </ng-container>
+</nav>

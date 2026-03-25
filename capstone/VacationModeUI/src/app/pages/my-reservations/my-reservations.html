@@ -20,13 +20,14 @@
     <div *ngFor="let r of reservations" class="reservation-card-v2">
       
       <div class="res-image-side">
-        <img [src]="r.property?.imageUrl || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&auto=format&fit=crop&q=60'" alt="Property" />
+        <img [src]="r.property?.images?.[0] || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&auto=format&fit=crop&q=60'" alt="Property" />
       </div>
 
       <div class="res-content-side">
         <div class="res-header">
           <div>
             <h3>{{ r.property?.title || ('Property #' + r.propertyId) }}</h3>
+            <p class="res-owner" *ngIf="r.property?.ownerName">Hosted by {{ r.property?.ownerName }}</p>
             <p class="res-id">Confirmation ID: #{{ r.reservationId }}</p>
           </div>
           <span class="status-badge" [ngClass]="'status-' + r.reservationStatus.toLowerCase()">
@@ -55,7 +56,9 @@
               Booked on {{ r.createdAt | date: 'MMM d, y' }}
             </div>
           </div>
-          <button *ngIf="r.reservationStatus !== 'Cancelled'" (click)="cancelReservation(r.reservationId)" class="btn btn-danger btn-sm" style="padding: 0.5rem 1rem; border-radius: 6px; border: none; background: var(--error); color: white; cursor: pointer; font-weight: 600;">Cancel Booking</button>
+          <button *ngIf="r.reservationStatus !== 'Cancelled'" (click)="cancelReservation(r.reservationId)" [disabled]="isCancelling[r.reservationId!]" class="btn btn-danger btn-sm" style="padding: 0.5rem 1rem; border-radius: 6px; border: none; background: var(--error); color: white; cursor: pointer; font-weight: 600;">
+            {{ isCancelling[r.reservationId!] ? 'Cancelling...' : 'Cancel Booking' }}
+          </button>
         </div>
       </div>
 

@@ -1,0 +1,9 @@
+<h2>Favourite Hobbies</h2>
+
+<ul>
+  <li *ngFor="let hobby of hobbies">
+    <span *ngIf="hobby.fav">
+      {{ hobby.name }}
+    </span>
+  </li>
+</ul>

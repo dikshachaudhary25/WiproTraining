@@ -1,0 +1,86 @@
+<div class="dashboard-container container">
+  <h2>Owner Dashboard</h2>
+  <p class="text-muted">Overview of your properties, reservations, and revenue.</p>
+
+  <div *ngIf="isLoading" class="empty-state">
+    <div class="spinner"></div>
+    <p>Loading analytics...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">⚠️ {{ error }}</div>
+
+  <ng-container *ngIf="!isLoading && stats">
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🏠</div>
+        <div class="stat-info">
+          <h3>Total Properties</h3>
+          <p class="stat-number">{{ stats.totalProperties }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+          <h3>Total Bookings</h3>
+          <p class="stat-number">{{ stats.totalReservations }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <h3>Total Revenue</h3>
+          <p class="stat-number">₹{{ stats.totalRevenue | number }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-info">
+          <h3>Top Performer</h3>
+          <p class="stat-number text-sm" style="font-size: 1.1rem; line-height: 1.2; word-break: break-all;">
+            {{ stats.mostBookedProperty || 'N/A' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="upcoming-section">
+      <h3>Upcoming Reservations</h3>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Guest Name</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Status</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let res of stats.upcomingReservations">
+              <td><strong>{{ res.propertyName }}</strong></td>
+              <td>{{ res.guestName }}</td>
+              <td>{{ res.checkInDate | date:'mediumDate' }}</td>
+              <td>{{ res.checkOutDate | date:'mediumDate' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="{
+                  'status-pending': res.reservationStatus === 'Pending',
+                  'status-confirmed': res.reservationStatus === 'Confirmed'
+                }">{{ res.reservationStatus }}</span>
+              </td>
+              <td>₹{{ res.totalAmount | number }}</td>
+            </tr>
+            <tr *ngIf="stats.upcomingReservations.length === 0">
+              <td colspan="6" style="text-align: center; color: #888; padding: 2rem;">
+                No upcoming reservations.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

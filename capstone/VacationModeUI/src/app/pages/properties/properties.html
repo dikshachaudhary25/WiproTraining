@@ -6,19 +6,49 @@
 
   <div *ngIf="deleteError" class="alert alert-error" style="margin-bottom: 1rem;">⚠️ {{ deleteError }}</div>
 
-  <!-- Search Bar -->
-  <div class="search-container">
-    <div class="search-box">
-      <span class="search-icon">🔍</span>
-      <input type="text" placeholder="Search by city..." [(ngModel)]="searchCity" (input)="filterProperties()" />
+  
+  <div class="search-container" style="flex-direction: column; gap: 10px;">
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search by city..." [(ngModel)]="searchCity" />
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🏠</span>
+        <input type="text" placeholder="Filter by type..." [(ngModel)]="searchType" />
+      </div>
+      <div class="search-box">
+        <span class="search-icon">💰</span>
+        <input type="number" placeholder="Min price..." [(ngModel)]="searchMinPrice" style="width: 100px; margin-right: 5px;" />
+        <input type="number" placeholder="Max price..." [(ngModel)]="searchMaxPrice" style="width: 100px;" />
+      </div>
     </div>
-    <div class="search-box">
-      <span class="search-icon">🏠</span>
-      <input type="text" placeholder="Filter by type..." [(ngModel)]="searchType" (input)="filterProperties()" />
+    
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px; align-items: center;">
+      <div class="search-box">
+        <span class="search-icon">📅</span>
+        <input type="date" [(ngModel)]="searchCheckIn" placeholder="Check-in" style="width: 130px;" />
+      </div>
+      <div class="search-box">
+        <span class="search-icon">📅</span>
+        <input type="date" [(ngModel)]="searchCheckOut" placeholder="Check-out" style="width: 130px;" />
+      </div>
+      <div class="search-box">
+        <span class="search-icon">✨</span>
+        <input type="text" placeholder="Features (e.g. pool, wifi)" [(ngModel)]="searchFeatures" style="width: 180px;" />
+      </div>
+      <div class="search-box" style="margin-left: auto;">
+        <span class="search-icon">⚡</span>
+        <select [(ngModel)]="sortBy" (change)="sortProperties()">
+          <option value="rating">Top Rated</option>
+          <option value="price">Lowest Price</option>
+        </select>
+        <button class="btn btn-primary" style="margin-left: 10px; padding: 0.5rem 1.5rem;" (click)="executeSearch()" [disabled]="isLoading">Search</button>
+      </div>
     </div>
   </div>
 
-  <!-- Loading / Empty States -->
+  
   <div *ngIf="isLoading" class="empty-state">
     <div class="spinner"></div>
     <p>Finding properties...</p>
@@ -26,21 +56,31 @@
 
   <div *ngIf="!isLoading && filteredProperties.length === 0" class="empty-state">
     <p>No properties match your search criteria.</p>
-    <button class="btn btn-outline mt-4" (click)="searchCity=''; searchType=''; filterProperties()">Clear Filters</button>
+    <button class="btn btn-outline mt-4" (click)="clearFilters()">Clear Filters</button>
   </div>
 
-  <!-- Properties Grid -->
+  
   <div class="properties-grid" *ngIf="!isLoading">
     <div *ngFor="let property of filteredProperties" class="property-card shadow-hover">
       
       <div class="card-image-wrapper">
-        <img [src]="property.imageUrl || placeholderImage" [alt]="property.title" loading="lazy" />
+        <img [src]="(property.images && property.images.length > 0) ? property.images[0] : placeholderImage" [alt]="property.title" loading="lazy" />
         <span class="property-tag">{{ property.propertyType }}</span>
+        
+        
+        <button class="wishlist-btn" *ngIf="auth.isLoggedIn() && auth.isRenter()" 
+                (click)="addToWishlist(property.propertyId, $event)" 
+                [disabled]="isWishlisting[property.propertyId!]"
+                [title]="property.isInWishlist ? 'Remove from Wishlist' : 'Save to Wishlist'"
+                style="position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;">
+          {{ property.isInWishlist ? '❤️' : '🤍' }}
+        </button>
       </div>
 
       <div class="card-content">
         <div class="card-header">
           <h3>{{ property.title }}</h3>
+          <span class="rating-badge" *ngIf="property.rating && property.rating > 0">⭐ {{ property.rating | number:'1.1-1' }}</span>
           <p class="location-text">📍 {{ property.city }}, {{ property.state }}</p>
         </div>
 
@@ -53,17 +93,17 @@
             <span class="price-amount">₹{{ property.pricePerNight }}</span>
             <span class="price-unit">/ night</span>
           </div>
-          <button class="btn btn-primary btn-sm" (click)="viewProperty(property.propertyId)">View Details</button>
+          <a [routerLink]="['/properties', property.propertyId]" class="btn btn-primary btn-sm">View Details</a>
         </div>
 
-        <!-- Reserve button: only for logged-in renters -->
+        
         <div *ngIf="auth.isLoggedIn() && auth.isRenter()" class="reserve-action">
           <button class="btn btn-secondary btn-sm" (click)="toggleReserveForm(property.propertyId)">
             {{ reservingPropertyId === property.propertyId ? 'Cancel' : 'Reserve' }}
           </button>
         </div>
 
-        <!-- Inline Reservation Form -->
+        
         <div *ngIf="reservingPropertyId === property.propertyId" class="inline-reservation-form">
           <div *ngIf="reservationSuccess" class="alert alert-success">{{ reservationSuccess }}</div>
           <div *ngIf="reservationError" class="alert alert-error">{{ reservationError }}</div>
@@ -78,15 +118,18 @@
               <input type="date" [(ngModel)]="checkOutDate" [min]="checkInDate || today" />
             </div>
           </div>
-          <button class="btn btn-primary btn-sm w-full" (click)="submitReservation(property.propertyId)">
-            Confirm Reservation
+          <button class="btn btn-primary btn-sm w-full" (click)="submitReservation(property.propertyId)" [disabled]="isReserving[property.propertyId!] || !checkInDate || !checkOutDate">
+            <span *ngIf="!isReserving[property.propertyId!]">Confirm Reservation</span>
+            <span *ngIf="isReserving[property.propertyId!]">Reserving...</span>
           </button>
         </div>
 
-        <!-- Owner actions: only for the actual owner of this property -->
+        
         <div *ngIf="isPropertyOwner(property)" class="owner-actions">
-          <button class="btn-text btn-edit" (click)="editProperty(property.propertyId)">Edit</button>
-          <button class="btn-text btn-delete" (click)="deleteProperty(property.propertyId)">Delete</button>
+          <a class="btn-text btn-edit" [routerLink]="['/edit-property', property.propertyId]">Edit</a>
+          <button class="btn-text btn-delete" (click)="deleteProperty(property.propertyId)" [disabled]="isDeleting[property.propertyId!]">
+            {{ isDeleting[property.propertyId!] ? 'Deleting...' : 'Delete' }}
+          </button>
         </div>
       </div>
 

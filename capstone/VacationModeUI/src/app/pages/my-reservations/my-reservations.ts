@@ -1,8 +1,7 @@
-import { Component, OnInit, afterNextRender, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReservationService } from '../../services/reservation';
-import { PropertyService } from '../../services/property';
 import { Reservation } from '../../models/reservation.model';
 import { Property } from '../../models/property.model';
 
@@ -17,45 +16,26 @@ export class MyReservationsComponent implements OnInit {
 
   reservations: Reservation[] = [];
   isLoading = false;
+  isCancelling: Record<number, boolean> = {};
   properties: Property[] = [];
 
   constructor(
     private reservationService: ReservationService,
-    private propertyService: PropertyService,
-    private cdr: ChangeDetectorRef
-  ) {
-    // Load reservations only after the component renders in the browser
-    afterNextRender(() => {
-      this.isLoading = true;
-      this.loadProperties();
-    });
-  }
+    private cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit() {
-    // intentionally empty — data loading is deferred to afterNextRender
-  }
-
-  private loadProperties() {
-    this.propertyService.getAllProperties().subscribe({
-      next: (properties: Property[]) => {
-        this.properties = properties;
-        this.loadReservations();
-      },
-      error: (err) => {
-        console.error('Error loading properties', err);
-        this.loadReservations();
-      }
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.isLoading = true;
+      this.loadReservations();
+    }
   }
 
   private loadReservations() {
     this.reservationService.getMyReservations().subscribe({
       next: (data: Reservation[]) => {
-        this.reservations = data.map(r => ({
-          ...r,
-          property: this.properties.find(p => p.propertyId === r.propertyId)
-        }));
-        // Sort by checkInDate descending or createdAt
+        this.reservations = data;
         this.reservations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -69,15 +49,17 @@ export class MyReservationsComponent implements OnInit {
   }
 
   cancelReservation(id: number) {
+    if (this.isCancelling[id]) return;
     if (confirm('Are you sure you want to cancel this reservation?')) {
-      this.isLoading = true;
+      this.isCancelling[id] = true;
       this.reservationService.cancelReservation(id).subscribe({
         next: () => {
+          this.isCancelling[id] = false;
           this.loadReservations();
         },
         error: (err) => {
           console.error('Error cancelling reservation', err);
-          this.isLoading = false;
+          this.isCancelling[id] = false;
           this.cdr.detectChanges();
         }
       });

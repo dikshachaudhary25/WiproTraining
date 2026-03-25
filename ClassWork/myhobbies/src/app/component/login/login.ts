@@ -1,18 +1,32 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css']
 })
-export class Login {
-  title = 'Login Page';
+export class LoginComponent {
   username = '';
   password = '';
-  myhobbies = ['Reading', 'Traveling', 'Cooking'];
+  errorMessage = '';
+
+  constructor(private authService: AuthService, private router: Router) {}
+
   onLogin() {
-    console.log('Login');
+    if (!this.username || !this.password) {
+      this.errorMessage = 'Please enter username and password.';
+      return;
+    }
+    if (this.authService.login(this.username, this.password)) {
+      this.router.navigate(['/home']);
+    } else {
+      this.errorMessage = 'Invalid username or password.';
+    }
   }
 }

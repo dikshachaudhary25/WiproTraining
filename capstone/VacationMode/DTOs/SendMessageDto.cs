@@ -5,5 +5,7 @@ namespace VacationMode.DTOs
         public int PropertyId { get; set; }
 
         public string MessageText { get; set; } = string.Empty;
+
+        public int? ReceiverId { get; set; }
     }
 }

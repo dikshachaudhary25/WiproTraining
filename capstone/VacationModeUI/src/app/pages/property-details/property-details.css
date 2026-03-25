@@ -210,3 +210,30 @@
     grid-template-columns: 1fr;
   }
 }
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sent {
+  align-self: flex-end;
+  background-color: #4f46e5;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 16px 16px 0 16px;
+  margin: 5px;
+  max-width: 60%;
+  word-wrap: break-word;
+}
+
+.received {
+  align-self: flex-start;
+  background-color: #f1f5f9;
+  color: black;
+  padding: 10px 14px;
+  border-radius: 16px 16px 16px 0;
+  margin: 5px;
+  max-width: 60%;
+  word-wrap: break-word;
+}

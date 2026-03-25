@@ -1,1 +1,17 @@
-<p>register works!</p>
+<h2>Register</h2>
+
+<form (ngSubmit)="onRegister()" #regForm="ngForm">
+  <div>
+    <label>Username: <input type="text" name="username" [(ngModel)]="username" required /></label>
+  </div>
+  <div>
+    <label>Password: <input type="password" name="password" [(ngModel)]="password" required /></label>
+  </div>
+  <div>
+    <label>Confirm Password: <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required /></label>
+  </div>
+  <p *ngIf="errorMessage">{{ errorMessage }}</p>
+  <button type="submit">Register</button>
+</form>
+
+<p>Already have an account? <a routerLink="/login">Login</a></p>

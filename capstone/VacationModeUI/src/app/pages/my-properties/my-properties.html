@@ -1,0 +1,62 @@
+<div class="container py-5">
+  <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+      <h2 style="margin: 0;">My Properties</h2>
+      <p style="color: #888; margin: 4px 0 0;">Manage your property listings</p>
+    </div>
+    <button class="btn btn-primary" routerLink="/add-property">+ Add New Property</button>
+  </div>
+
+  
+  <div *ngIf="isLoading" class="empty-state">
+    <div class="spinner"></div>
+    <p>Loading your properties...</p>
+  </div>
+
+  
+  <div *ngIf="errorMessage" class="alert alert-error">⚠️ {{ errorMessage }}</div>
+
+  
+  <div *ngIf="!isLoading && properties.length === 0" class="empty-state">
+    <h3>No properties yet</h3>
+    <p>Start by listing your first property.</p>
+    <button class="btn btn-primary mt-4" routerLink="/add-property">Add Property</button>
+  </div>
+
+  
+  <div *ngIf="!isLoading && properties.length > 0" class="property-list">
+    <div *ngFor="let p of properties" class="owner-property-card">
+      <div class="card-image-wrap">
+        <img [src]="getMainImage(p)" [alt]="p.title" class="card-img" />
+        <span class="type-badge">{{ p.propertyType }}</span>
+      </div>
+      <div class="card-body">
+        <div style="flex: 1;">
+          <h3 class="card-title">{{ p.title }}</h3>
+          <p class="card-location">📍 {{ p.city }}, {{ p.state }}</p>
+          <p class="card-price">₹{{ p.pricePerNight | number }} / night</p>
+          <p class="card-guests">👥 Max {{ p.maxGuests }} guests</p>
+          <p class="card-rating" *ngIf="p.rating && p.rating > 0">⭐ {{ p.rating | number:'1.1-1' }}</p>
+          <p class="card-rating no-rating" *ngIf="!p.rating || p.rating === 0">No ratings yet</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-outline btn-sm" [routerLink]="['/edit-property', p.propertyId]">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="confirmDelete(p)">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="propertyToDelete" class="modal-overlay" (click)="cancelDelete()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <h3>Delete Property?</h3>
+    <p>Are you sure you want to delete <strong>{{ propertyToDelete.title }}</strong>? This cannot be undone.</p>
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end;">
+      <button class="btn btn-outline" (click)="cancelDelete()">Cancel</button>
+      <button class="btn btn-danger" (click)="deleteProperty()" [disabled]="isDeleting">
+        {{ isDeleting ? 'Deleting...' : 'Yes, Delete' }}
+      </button>
+    </div>
+  </div>
+</div>

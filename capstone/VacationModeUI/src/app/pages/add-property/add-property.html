@@ -1,5 +1,5 @@
 <div class="auth-container">
-  <div class="auth-card" style="max-width: 600px;">
+  <div class="auth-card" style="max-width: 640px;">
     <h2>{{ isEditMode ? 'Edit Property' : 'Add New Property' }}</h2>
     <p class="subtitle">{{ isEditMode ? 'Update your property listing' : 'List your vacation property' }}</p>
 
@@ -61,6 +61,26 @@
         <div class="form-group">
           <label>Max Guests</label>
           <input type="number" placeholder="e.g. 4" [(ngModel)]="property.maxGuests" name="maxGuests" required min="1" />
+        </div>
+      </div>
+
+      
+      <div class="form-group">
+        <label>Property Photos (up to 5)</label>
+        <input type="file" accept="image/*" multiple (change)="onImagesSelected($event)"
+          style="padding: 0.4rem 0;" />
+        <small style="color: #888;">JPG, PNG, WebP supported. Max 5 images.</small>
+
+        
+        <div *ngIf="imagePreviews.length > 0"
+          style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;">
+          <div *ngFor="let preview of imagePreviews; let i = index"
+            style="position: relative; display: inline-block;">
+            <img [src]="preview"
+              style="width: 110px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid var(--primary);" />
+            <button type="button" (click)="removeImage(i)"
+              style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 13px;">✕</button>
+          </div>
         </div>
       </div>
 

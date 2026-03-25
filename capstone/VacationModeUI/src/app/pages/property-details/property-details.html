@@ -17,7 +17,22 @@
 
   <header class="details-header">
     <button class="btn-back" routerLink="/properties">← Explore more stays</button>
-    <h1>{{ property.title }}</h1>
+    <h1 style="display: flex; align-items: center; justify-content: space-between;">
+      <span>{{ property.title }}</span>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <span class="rating-badge" *ngIf="property.rating && property.rating > 0" style="font-size: 1.2rem; margin-top: 5px;">⭐ {{ property.rating | number:'1.1-1' }}</span>
+        
+        
+        <button *ngIf="auth.isLoggedIn() && auth.isRenter()" 
+                (click)="toggleWishlist($event)" 
+                class="wishlist-detail-btn"
+                [disabled]="isWishlisting"
+                [title]="property.isInWishlist ? 'Remove from Wishlist' : 'Save to Wishlist'"
+                style="background: white; border: 1px solid #eef2f9; border-radius: 50%; width: 45px; height: 45px; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s;">
+          {{ property.isInWishlist ? '❤️' : '🤍' }}
+        </button>
+      </div>
+    </h1>
     <div class="location-badge">📍 {{ property.location }}, {{ property.city }}, {{ property.state }}</div>
   </header>
 
@@ -25,7 +40,14 @@
 
     <div class="details-content">
       <div class="main-image-wrapper">
-        <img [src]="property.imageUrl || placeholderImage" [alt]="property.title" class="main-image" />
+        <img [src]="selectedImage || placeholderImage" [alt]="property.title" class="main-image" />
+      </div>
+      <div class="thumbnails mt-3 d-flex" *ngIf="property.images && property.images.length > 1" style="display: flex; gap: 10px; overflow-x: auto;">
+        <img *ngFor="let img of property.images" [src]="img" 
+             (click)="selectedImage = img" 
+             [class.active]="selectedImage === img"
+             style="height: 80px; width: 120px; object-fit: cover; cursor: pointer; border-radius: 8px; border: 2px solid transparent;"
+             [style.border-color]="selectedImage === img ? 'var(--primary)' : 'transparent'" />
       </div>
 
       <section class="info-section">
@@ -42,7 +64,7 @@
         </div>
       </section>
 
-      <!-- Dynamic Features List -->
+      
       <section class="features-section" *ngIf="property.features && property.features.length > 0">
         <h3>Features</h3>
         <ul class="features-list">
@@ -50,6 +72,51 @@
             <span class="feature-check">✓</span> {{ feature }}
           </li>
         </ul>
+      </section>
+
+      
+      <section class="reviews-section mt-5" style="border-top: 1px solid #eef2f9; padding-top: 2rem;">
+        <h3>Reviews ({{ reviews.length }})</h3>
+        
+        <div class="reviews-list mt-3">
+          <div *ngIf="reviews.length === 0" class="text-muted">No reviews yet. Be the first to review!</div>
+          <div *ngFor="let review of reviews" class="review-item mb-3 p-3" style="background: #f8faff; border-radius: 8px;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <strong>{{ review.userName || 'User #' + review.userId }}</strong>
+              <span class="rating-badge text-sm">⭐ {{ review.rating }}</span>
+            </div>
+            <p class="mb-1" style="color: #444; font-size: 0.95rem;">{{ review.comment }}</p>
+            <small class="text-muted">{{ review.createdAt | date:'mediumDate' }}</small>
+          </div>
+        </div>
+
+        
+        <div class="write-review-card mt-4 p-4" *ngIf="auth.isLoggedIn() && auth.isRenter()" style="background: white; border: 1px solid #eef2f9; border-radius: 12px;">
+          <h4>Write a Review</h4>
+          <div *ngIf="reviewSuccess" class="alert alert-success">{{ reviewSuccess }}</div>
+          <div *ngIf="reviewError" class="alert alert-error">{{ reviewError }}</div>
+          
+          <div class="form-group mt-3">
+            <label>Rating</label>
+            <select [(ngModel)]="newReviewRating" class="form-control" style="width: auto;">
+              <option [ngValue]="5">⭐⭐⭐⭐⭐ (5)</option>
+              <option [ngValue]="4">⭐⭐⭐⭐ (4)</option>
+              <option [ngValue]="3">⭐⭐⭐ (3)</option>
+              <option [ngValue]="2">⭐⭐ (2)</option>
+              <option [ngValue]="1">⭐ (1)</option>
+            </select>
+          </div>
+          <div class="form-group mt-3">
+            <label>Comment</label>
+            <textarea [(ngModel)]="newReviewComment" class="form-control" rows="3" placeholder="Share your experience..."></textarea>
+          </div>
+          <button class="btn btn-primary mt-3" (click)="submitReview()" [disabled]="isSubmittingReview || !newReviewComment.trim()">
+            {{ isSubmittingReview ? 'Submitting...' : 'Submit Review' }}
+          </button>
+        </div>
+        <div class="write-review-card mt-4 p-4" *ngIf="!auth.isLoggedIn()" style="background: #f8faff; border-radius: 12px; text-align: center;">
+          <p class="text-muted"><a routerLink="/login" style="color: var(--primary); font-weight: 600;">Log in</a> to leave a review.</p>
+        </div>
       </section>
     </div>
 
@@ -59,7 +126,7 @@
         <span class="unit">/ night</span>
       </div>
 
-      <!-- Reservation form: only for logged-in renters -->
+      
       <ng-container *ngIf="auth.isLoggedIn() && auth.isRenter()">
 
         <div class="reservation-card">
@@ -82,8 +149,8 @@
             <input type="date" [(ngModel)]="checkOutDate" [min]="checkInDate || today" />
           </div>
 
-          <button class="btn btn-primary w-100 mt-4" (click)="reserveProperty()">
-            Reserve Stay
+          <button class="btn btn-primary w-100 mt-4" (click)="reserveProperty()" [disabled]="isReserving || !checkInDate || !checkOutDate">
+            {{ isReserving ? 'Reserving...' : 'Reserve Stay' }}
           </button>
 
           <p class="text-center text-muted mt-2" style="font-size: 0.75rem;">
@@ -94,7 +161,7 @@
 
       </ng-container>
 
-      <!-- Prompt for unauthenticated users -->
+      
       <div *ngIf="!auth.isLoggedIn()" class="reservation-card">
         <p class="text-center text-muted" style="font-size: 0.9rem; padding: 1rem 0;">
           <a routerLink="/login" style="color: var(--primary); font-weight: 600;">Log in</a>
@@ -104,7 +171,7 @@
         </p>
       </div>
 
-      <!-- Message for owners -->
+      
       <div *ngIf="auth.isLoggedIn() && auth.isOwner()" class="reservation-card">
         <p class="text-center text-muted" style="font-size: 0.9rem; padding: 1rem 0;">
           You are viewing this as an owner. Switch to a Renter account to make reservations.
@@ -115,8 +182,39 @@
         <h4>Managed by</h4>
         <div class="owner-pill">
           <span class="avatar">👤</span>
-          <span>Owner #{{ property.ownerId }}</span>
+          <span>{{ property.ownerName || 'Owner #' + property.ownerId }}</span>
         </div>
+      </div>
+
+      
+      <div class="reservation-card mt-4" *ngIf="auth.isLoggedIn() && auth.isRenter()">
+        <h4 style="margin-bottom: 1rem; font-size: 1.1rem;">Chat with Owner</h4>
+        
+        <div class="chat-window mb-3 chat-container" style="max-height: 300px; overflow-y: auto; background: #f8faff; border-radius: 8px; padding: 1rem; border: 1px solid #eef2f9;">
+          <div *ngIf="conversation.length === 0" class="text-muted text-center" style="font-size: 0.85rem;">
+            No messages yet. Start a conversation!
+          </div>
+          
+          <div *ngFor="let msg of conversation" [ngClass]="msg.senderId === auth.getUserId() ? 'sent' : 'received'">
+            <div style="font-size: 0.70rem; opacity: 0.8; margin-bottom: 2px;">
+              {{ msg.senderId === auth.getUserId() ? 'You' : msg.senderName }}
+            </div>
+            
+            {{ msg.messageText }}
+            
+            <div style="font-size: 0.65rem; opacity: 0.7; margin-top: 4px; text-align: right;">
+              {{ msg.sentAt | date:'shortTime' }}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="messageSuccess" class="alert alert-success">{{messageSuccess}}</div>
+        <div *ngIf="messageError" class="alert alert-error">{{messageError}}</div>
+        
+        <textarea [(ngModel)]="messageText" (keyup.enter)="sendMessage()" class="form-control" rows="2" placeholder="Write your message..." style="width: 100%; border-radius: 6px; border: 1px solid #ccc; padding: 0.5rem;"></textarea>
+        <button class="btn btn-secondary w-100 mt-2" (click)="sendMessage()" [disabled]="isSendingMessage || !messageText.trim()">
+          {{ isSendingMessage ? 'Sending...' : 'Send Message' }}
+        </button>
       </div>
 
     </aside>

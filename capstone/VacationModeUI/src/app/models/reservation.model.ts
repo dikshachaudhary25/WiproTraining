@@ -9,5 +9,6 @@ export interface Reservation {
   totalAmount: number;
   reservationStatus: string;
   createdAt: string;
+  renterName?: string;
   property?: Property;
 }
